@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
  android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical"
- android:gravity="center_vertical" android:paddingLeft="9dp" android:paddingRight="9dp"
+ android:gravity="center_vertical" android:paddingLeft="8dp" android:paddingRight="8dp"
  android:paddingTop="4dp" android:paddingBottom="4dp" android:background="@drawable/widget_bg">
  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-  <TextView android:id="@+id/widget_title" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="DAYWEAR" android:textSize="10sp" android:textStyle="bold" android:textColor="#111111" android:singleLine="true" android:ellipsize="end"/>
-  <TextView android:id="@+id/widget_temps" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="☀ —°  ☁ —°  ☂ —°" android:textSize="11sp" android:textStyle="bold" android:textColor="#111111" android:singleLine="true"/>
+  <TextView android:id="@+id/widget_title" android:layout_width="wrap_content" android:layout_height="wrap_content"
+   android:text="DAYWEAR" android:fontFamily="sans-serif-condensed" android:textSize="15sp" android:textStyle="bold"
+   android:includeFontPadding="false" android:textColor="#111111" android:singleLine="true"/>
+  <TextView android:id="@+id/widget_city" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"
+   android:layout_marginLeft="5dp" android:gravity="end" android:text="제주시"
+   android:textSize="10sp" android:includeFontPadding="false" android:textColor="#666666"
+   android:singleLine="true" android:ellipsize="end"/>
  </LinearLayout>
- <TextView android:id="@+id/widget_outfit" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="오늘의 조합 · 앱에서 확인" android:textSize="10sp" android:textColor="#222222" android:maxLines="2" android:ellipsize="end"/>
+ <TextView android:id="@+id/widget_temps" android:layout_width="match_parent" android:layout_height="wrap_content"
+  android:layout_marginTop="4dp" android:gravity="center_horizontal" android:text="☀ 17°  ☁ 20°  ☂ 17°"
+  android:textSize="15sp" android:textStyle="bold" android:includeFontPadding="false"
+  android:textColor="#111111" android:singleLine="true" android:autoSizeTextType="uniform"
+  android:autoSizeMinTextSize="11sp" android:autoSizeMaxTextSize="15sp" android:autoSizeStepGranularity="1sp"/>
+ <TextView android:id="@+id/widget_outfit" android:layout_width="match_parent" android:layout_height="wrap_content"
+  android:layout_marginTop="4dp" android:text="두툼한 가디건 · 긴팔 티셔츠"
+  android:textSize="12sp" android:textStyle="bold" android:includeFontPadding="false"
+  android:textColor="#222222" android:maxLines="2" android:ellipsize="end"/>
 </LinearLayout>
