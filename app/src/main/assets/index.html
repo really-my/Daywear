@@ -223,7 +223,7 @@ function currentWeatherPanel(data,date){
  const h=data.hourly,tz=data.timezone||'Asia/Seoul',now=new Intl.DateTimeFormat('sv-SE',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',hourCycle:'h23'}).format(new Date()).replace(' ','T');
  const todayHours=h.time.map((time,i)=>({time,i})).filter(x=>x.time.startsWith(date+'T'));
  if(!todayHours.length)return '';
- const current=todayHours.reduce((best,x)=>Math.abs(Date.parse(x.time+'Z')-Date.parse(now+'Z'))<Math.abs(Date.parse(best.time+'Z')-Date.parse(now+'Z'))?x:best,todayHours[0]);
+ const hourKey=now.slice(0,13),current=todayHours.find(x=>x.time.slice(0,13)===hourKey)||todayHours.reduce((best,x)=>Math.abs(Number(x.time.slice(11,13))-Number(now.slice(11,13)))<Math.abs(Number(best.time.slice(11,13))-Number(now.slice(11,13)))?x:best,todayHours[0]);
  const i=current.i,w=sky(h.weather_code[i]),temp=Math.round(h.temperature_2m[i]),feel=Math.round(h.apparent_temperature[i]);
  const forecast=todayHours.filter(x=>Number(x.time.slice(11,13))%2===0).map(x=>{const k=x.i,wx=sky(h.weather_code[k]);return '<div class="hourcell"><span>'+x.time.slice(11,13)+'시</span><b>'+wx[0]+'</b><strong>'+Math.round(h.temperature_2m[k])+'°</strong></div>'}).join('');
  return '<div class="current-hero"><div class="hero-place">⌖ '+esc(state.city.name)+'</div><div class="hero-main"><span class="hero-icon">'+w[0]+'</span><strong>'+temp+'°</strong></div><div class="hero-condition">'+w[1]+' <span>· 체감 '+feel+'°</span></div></div><div class="hourly-panel"><div class="hourly-heading">오늘 시간별 날씨 <span>← 옆으로 넘겨보기 →</span></div><div class="hourly-track">'+forecast+'</div></div>';
