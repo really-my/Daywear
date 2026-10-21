@@ -107,6 +107,28 @@ public class MainActivity extends Activity {
     String js=location==null?"window.daywearLocation&&window.daywearLocation(null,null,"+org.json.JSONObject.quote(error==null?"위치 권한이 필요합니다.":error)+")":
       "window.daywearLocation&&window.daywearLocation("+location.getLatitude()+","+location.getLongitude()+",null)";
     web.evaluateJavascript(js,null);
+    if(location!=null)resolveCity(location);
+  }
+  private void resolveCity(Location location){
+    new Thread(()->{
+      String city=null;
+      try{
+        if(android.location.Geocoder.isPresent()){
+          java.util.List<android.location.Address> results=new android.location.Geocoder(getApplicationContext(),java.util.Locale.KOREAN).getFromLocation(location.getLatitude(),location.getLongitude(),1);
+          if(results!=null&&!results.isEmpty()){
+            android.location.Address a=results.get(0);
+            String admin=a.getAdminArea();
+            if(admin!=null&&(admin.endsWith("특별시")||admin.endsWith("광역시")||admin.contains("세종")))city=admin.replace("특별자치시","").replace("특별시","").replace("광역시","");
+            else city=a.getLocality();
+            if(city==null||city.trim().isEmpty())city=a.getSubAdminArea();
+            if(city==null||city.trim().isEmpty())city=admin;
+            if(city==null||city.trim().isEmpty())city=a.getCountryName();
+          }
+        }
+      }catch(Exception ignored){}
+      final String label=city;
+      runOnUiThread(()->{if(!isDestroyed()&&!isFinishing())web.evaluateJavascript("window.daywearCityName&&window.daywearCityName("+location.getLatitude()+","+location.getLongitude()+","+org.json.JSONObject.quote(label==null?"":label)+")",null);});
+    },"daywear-city").start();
   }
   @Override public void onRequestPermissionsResult(int code,String[] permissions,int[] grants){
     super.onRequestPermissionsResult(code,permissions,grants);
