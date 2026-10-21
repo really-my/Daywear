@@ -84,7 +84,7 @@ public class MainActivity extends Activity {
   private void beginLocation(){
     if(locating)return;
     if(checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
-      requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},LOCATION_PERMISSION);return;
+      requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_PERMISSION);return;
     }
     locating=true;manager=(LocationManager)getSystemService(LOCATION_SERVICE);
     listener=new LocationListener(){
@@ -94,10 +94,16 @@ public class MainActivity extends Activity {
       @Override public void onStatusChanged(String provider,int status,Bundle extras){}
     };
     try{
-      if(manager==null||!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){finishLocation(null,"위치 서비스를 켜 주세요.");return;}
-      Location cached=manager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+      if(manager==null){finishLocation(null,"위치 서비스를 사용할 수 없습니다.");return;}
+      boolean network=manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+      boolean gps=manager.isProviderEnabled(LocationManager.GPS_PROVIDER)&&checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED;
+      if(!network&&!gps){finishLocation(null,"휴대전화 위치 서비스를 켜 주세요.");return;}
+      Location cached=null;
+      if(network)cached=manager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+      if(gps){Location gpsCached=manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);if(gpsCached!=null&&(cached==null||gpsCached.getElapsedRealtimeNanos()>cached.getElapsedRealtimeNanos()))cached=gpsCached;}
       if(cached!=null&&android.os.SystemClock.elapsedRealtimeNanos()-cached.getElapsedRealtimeNanos()<300000000000L){finishLocation(cached,null);return;}
-      manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,listener,Looper.getMainLooper());
+      if(network)manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,listener,Looper.getMainLooper());
+      if(gps)manager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,listener,Looper.getMainLooper());
       timeout=()->finishLocation(null,"현재 위치를 확인하지 못했습니다.");handler.postDelayed(timeout,20000);
     }catch(Exception e){finishLocation(null,"현재 위치를 확인하지 못했습니다.");}
   }
