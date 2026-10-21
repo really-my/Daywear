@@ -4,4 +4,4 @@
 <application android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher" android:allowBackup="true" android:label="Daywear" android:usesCleartextTraffic="false" android:theme="@style/AppTheme">
 <activity android:name=".MainActivity" android:enableOnBackInvokedCallback="false" android:configChanges="orientation|screenSize|keyboardHidden" android:exported="true" android:windowSoftInputMode="adjustResize">
 <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
-</activity></application></manifest>
+</activity><receiver android:name=".DaywearWidget" android:exported="true"><intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE"/></intent-filter><meta-data android:name="android.appwidget.provider" android:resource="@xml/daywear_widget_info"/></receiver></application></manifest>
