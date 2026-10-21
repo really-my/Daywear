@@ -50,6 +50,8 @@ public class MainActivity extends Activity {
     WebSettings settings=web.getSettings();settings.setJavaScriptEnabled(true);settings.setDomStorageEnabled(true);
     settings.setAllowFileAccess(true);settings.setAllowContentAccess(true);settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
     web.addJavascriptInterface(new Object(){
+      @JavascriptInterface public void setTheme(String theme){getSharedPreferences("daywear-widget",0).edit().putString("theme",theme).apply();DaywearWidget.refresh(MainActivity.this);}
+      @JavascriptInterface public void updateWidget(String json){try{org.json.JSONObject j=new org.json.JSONObject(json);getSharedPreferences("daywear-widget",0).edit().putString("data",json).putString("theme",j.optString("theme","black")).apply();DaywearWidget.refresh(MainActivity.this);}catch(Exception ignored){}}
       @JavascriptInterface public void requestLocation(){runOnUiThread(()->{if(web.getUrl()!=null&&web.getUrl().startsWith(PAGE))beginLocation();});}
     },"DaywearNative");
     web.setWebChromeClient(new WebChromeClient(){
