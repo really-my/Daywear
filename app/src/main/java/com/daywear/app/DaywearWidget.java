@@ -49,16 +49,16 @@ public class DaywearWidget extends AppWidgetProvider {
       JSONObject data=new JSONObject(context.getSharedPreferences("daywear-widget",0).getString("data","{}"));
       String theme=context.getSharedPreferences("daywear-widget",0).getString("theme","black");
       RemoteViews views=new RemoteViews(context.getPackageName(),R.layout.widget_daywear);
-      String city=data.optString("cityName","오늘");views.setTextViewText(R.id.widget_title,"DAYWEAR · "+city);
+      String city=data.optString("cityName","오늘");views.setTextViewText(R.id.widget_title,"DAYWEAR®");views.setTextViewText(R.id.widget_city,city);
       JSONArray t=data.optJSONArray("temps"),codes=data.optJSONArray("codes");
       if(t!=null&&t.length()==3){String[] parts=new String[3];for(int i=0;i<3;i++){int c=codes!=null?codes.optInt(i,3):3;String icon=c==0?"☀":c<=3?"☁":c<=48?"≋":c>=95?"ϟ":(c>=71&&c<=77)||(c>=85&&c<=86)?"❄":"☂";parts[i]=icon+t.optInt(i)+"°";}views.setTextViewText(R.id.widget_temps,parts[0]+"  "+parts[1]+"  "+parts[2]);}
       String outer=data.optString("outer",""),inner=data.optString("inner","");
       views.setTextViewText(R.id.widget_outfit,outer.isEmpty()?"오늘의 조합 · 앱에서 확인":outer+" · "+inner);
       int color="pink".equals(theme)?Color.rgb(237,22,138):"blue".equals(theme)?Color.rgb(36,80,220):Color.BLACK;
-      views.setTextColor(R.id.widget_title,color);views.setTextColor(R.id.widget_temps,color);views.setTextColor(R.id.widget_outfit,color);
+      views.setTextColor(R.id.widget_title,color);views.setTextColor(R.id.widget_temps,color);views.setTextColor(R.id.widget_outfit,color);views.setTextColor(R.id.widget_city,color);
       Intent intent=new Intent(context,MainActivity.class);intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
       PendingIntent open=PendingIntent.getActivity(context,0,intent,PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
-      views.setOnClickPendingIntent(R.id.widget_title,open);
+      views.setOnClickPendingIntent(R.id.widget_title,open);views.setOnClickPendingIntent(R.id.widget_city,open);
       views.setOnClickPendingIntent(R.id.widget_temps,open);
       views.setOnClickPendingIntent(R.id.widget_outfit,open);
       AppWidgetManager manager=AppWidgetManager.getInstance(context);ComponentName name=new ComponentName(context,DaywearWidget.class);manager.updateAppWidget(name,views);
