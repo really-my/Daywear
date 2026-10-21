@@ -14,6 +14,7 @@ import java.net.URL;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
@@ -41,6 +42,9 @@ public class DaywearWidget extends AppWidgetProvider {
     double low=Math.min(f[0],Math.min(f[1],f[2])),mid=f[1];
     String outer=low<0?"두꺼운 패딩 + 목도리":low<5?"패딩 또는 두꺼운 울 코트":low<10?"울 코트 또는 보온 점퍼":low<16?"두툼한 가디건 또는 점퍼":low<20?"얇은 가디건 또는 가벼운 재킷":low<24?"가벼운 셔츠 아우터":"아우터 없이, 냉방용 얇은 셔츠";
     String inner=mid<5?"보온 이너 + 니트":mid<12?"긴팔 티셔츠 + 니트":mid<20?"얇은 긴팔 티셔츠":mid<25?"얇은 긴팔 또는 반팔":"통기성 좋은 반팔";
+    String nowHour=LocalDateTime.now(ZoneId.of(zone)).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH"));int nowIdx=-1;
+    for(int j=0;j<times.length();j++)if(times.optString(j).startsWith(nowHour)){nowIdx=j;break;}
+    if(nowIdx>=0){saved.put("currentTemp",(int)Math.round(temps.getDouble(nowIdx)));saved.put("currentCode",weatherCodes.optInt(nowIdx,3));}
     saved.put("temps",new JSONArray().put(t[0]).put(t[1]).put(t[2]));saved.put("codes",new JSONArray().put(codes[0]).put(codes[1]).put(codes[2]));saved.put("outer",outer);saved.put("inner",inner);saved.put("widgetDate",date);
     context.getSharedPreferences("daywear-widget",0).edit().putString("data",saved.toString()).apply();
   }
@@ -50,27 +54,24 @@ public class DaywearWidget extends AppWidgetProvider {
       String theme=context.getSharedPreferences("daywear-widget",0).getString("theme","black");
       RemoteViews views=new RemoteViews(context.getPackageName(),R.layout.widget_daywear);
       String city=data.optString("cityName","오늘");
-      views.setTextViewText(R.id.widget_title,"DAYWEAR");
       views.setTextViewText(R.id.widget_city,city);
-      JSONArray t=data.optJSONArray("temps"),codes=data.optJSONArray("codes");
-      int[] tempIds={R.id.widget_morning_temp,R.id.widget_noon_temp,R.id.widget_evening_temp};
-      if(t!=null&&t.length()==3){
-        for(int i=0;i<3;i++){
-          int c=codes!=null?codes.optInt(i,3):3;
-          String icon=c==0?"☀":c<=3?"☁":c<=48?"≋":c>=95?"ϟ":(c>=71&&c<=77)||(c>=85&&c<=86)?"❄":"☂";
-          views.setTextViewText(tempIds[i],icon+" "+t.optInt(i)+"°");
-        }
-      }
+      int code=data.optInt("currentCode",3);
+      String icon=code==0?"☀":code<=3?"☁":code<=48?"≋":code>=95?"ϟ":(code>=71&&code<=77)||(code>=85&&code<=86)?"❄":"☂";
+      String condition=code==0?"맑음":code<=3?"구름":code<=48?"안개":code>=95?"뇌우":(code>=71&&code<=77)||(code>=85&&code<=86)?"눈":"비";
+      views.setTextViewText(R.id.widget_current_icon,icon);
+      views.setTextViewText(R.id.widget_current_temp,data.has("currentTemp")?data.optInt("currentTemp")+"°":"—°");
+      views.setTextViewText(R.id.widget_condition,condition);
       String outer=data.optString("outer",""),inner=data.optString("inner","");
-      views.setTextViewText(R.id.widget_outfit,outer.isEmpty()?"오늘의 조합 · 앱에서 확인":outer+" · "+inner);
+      views.setTextViewText(R.id.widget_outfit,outer.isEmpty()?"오늘의 추천 조합을 확인하세요":outer+" · "+inner);
       int color="pink".equals(theme)?Color.rgb(237,22,138):"blue".equals(theme)?Color.rgb(36,80,220):Color.BLACK;
-      views.setTextColor(R.id.widget_title,color);views.setTextColor(R.id.widget_sun,color);
-      views.setTextColor(R.id.widget_city,color);views.setTextColor(R.id.widget_outfit,color);
-      for(int id:tempIds)views.setTextColor(id,color);
+      views.setTextColor(R.id.widget_city,color);views.setTextColor(R.id.widget_current_temp,color);
+      views.setTextColor(R.id.widget_current_icon,color);views.setTextColor(R.id.widget_outfit,color);
       Intent intent=new Intent(context,MainActivity.class);intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
       PendingIntent open=PendingIntent.getActivity(context,0,intent,PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
-      views.setOnClickPendingIntent(R.id.widget_title,open);views.setOnClickPendingIntent(R.id.widget_city,open);
-      views.setOnClickPendingIntent(R.id.widget_sun,open);views.setOnClickPendingIntent(R.id.widget_morning_temp,open);views.setOnClickPendingIntent(R.id.widget_noon_temp,open);views.setOnClickPendingIntent(R.id.widget_evening_temp,open);
+      views.setOnClickPendingIntent(R.id.widget_city,open);
+      views.setOnClickPendingIntent(R.id.widget_current_icon,open);
+      views.setOnClickPendingIntent(R.id.widget_current_temp,open);
+      views.setOnClickPendingIntent(R.id.widget_condition,open);
       views.setOnClickPendingIntent(R.id.widget_outfit,open);
       AppWidgetManager manager=AppWidgetManager.getInstance(context);ComponentName name=new ComponentName(context,DaywearWidget.class);manager.updateAppWidget(name,views);
     }catch(Exception ignored){}
