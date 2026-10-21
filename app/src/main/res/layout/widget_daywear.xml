@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent"
- android:orientation="vertical" android:gravity="center_vertical" android:padding="7dp" android:background="@drawable/widget_bg">
+ android:orientation="vertical" android:gravity="center_vertical" android:padding="5dp" android:background="@drawable/widget_bg">
  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
   <TextView android:id="@+id/widget_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="DAYWEAR"
-   android:fontFamily="sans-serif-condensed" android:textSize="14sp" android:textStyle="bold" android:includeFontPadding="false" android:textColor="#111111"/>
+   android:fontFamily="sans-serif-condensed" android:textSize="17sp" android:textStyle="bold" android:includeFontPadding="false" android:textColor="#111111"/>
   <TextView android:id="@+id/widget_sun" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="top"
-   android:text="☀" android:layout_marginLeft="1dp" android:textSize="8sp" android:includeFontPadding="false" android:textColor="#111111"/>
+   android:text="☀" android:layout_marginLeft="1dp" android:textSize="10sp" android:includeFontPadding="false" android:textColor="#111111"/>
   <TextView android:id="@+id/widget_city" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:layout_marginLeft="3dp"
-   android:gravity="end" android:text="제주시" android:textSize="9sp" android:textColor="#666666" android:singleLine="true" android:ellipsize="end"/>
+   android:gravity="end" android:text="제주시" android:textSize="11sp" android:textColor="#666666" android:singleLine="true" android:ellipsize="end"/>
  </LinearLayout>
- <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:layout_marginTop="3dp"
+ <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:layout_marginTop="2dp"
   android:orientation="horizontal" android:baselineAligned="false">
   <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:layout_marginRight="2dp" android:gravity="center"
    android:orientation="vertical" android:background="@drawable/widget_weather_box">
    <TextView android:id="@+id/widget_morning" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center"
     android:text="아침" android:textSize="9sp" android:textColor="#666666" android:includeFontPadding="false"/>
    <TextView android:id="@+id/widget_morning_temp" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center"
-    android:text="☀ 17°" android:textSize="13sp" android:textStyle="bold" android:textColor="#111111" android:singleLine="true"
-    android:autoSizeTextType="uniform" android:autoSizeMinTextSize="9sp" android:autoSizeMaxTextSize="13sp" android:autoSizeStepGranularity="1sp"/>
+    android:text="☀ 17°" android:textSize="17sp" android:textStyle="bold" android:textColor="#111111" android:singleLine="true"
+    android:autoSizeTextType="uniform" android:autoSizeMinTextSize="12sp" android:autoSizeMaxTextSize="17sp" android:autoSizeStepGranularity="1sp"/>
   </LinearLayout>
   <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:layout_marginLeft="2dp" android:layout_marginRight="2dp"
    android:gravity="center" android:orientation="vertical" android:background="@drawable/widget_weather_box">
    <TextView android:id="@+id/widget_noon" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center"
     android:text="점심" android:textSize="9sp" android:textColor="#666666" android:includeFontPadding="false"/>
    <TextView android:id="@+id/widget_noon_temp" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center"
-    android:text="☁ 20°" android:textSize="13sp" android:textStyle="bold" android:textColor="#111111" android:singleLine="true"
-    android:autoSizeTextType="uniform" android:autoSizeMinTextSize="9sp" android:autoSizeMaxTextSize="13sp" android:autoSizeStepGranularity="1sp"/>
+    android:text="☁ 20°" android:textSize="17sp" android:textStyle="bold" android:textColor="#111111" android:singleLine="true"
+    android:autoSizeTextType="uniform" android:autoSizeMinTextSize="12sp" android:autoSizeMaxTextSize="17sp" android:autoSizeStepGranularity="1sp"/>
   </LinearLayout>
   <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:layout_marginLeft="2dp"
    android:gravity="center" android:orientation="vertical" android:background="@drawable/widget_weather_box">
    <TextView android:id="@+id/widget_evening" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center"
     android:text="저녁" android:textSize="9sp" android:textColor="#666666" android:includeFontPadding="false"/>
    <TextView android:id="@+id/widget_evening_temp" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center"
-    android:text="☂ 17°" android:textSize="13sp" android:textStyle="bold" android:textColor="#111111" android:singleLine="true"
-    android:autoSizeTextType="uniform" android:autoSizeMinTextSize="9sp" android:autoSizeMaxTextSize="13sp" android:autoSizeStepGranularity="1sp"/>
+    android:text="☂ 17°" android:textSize="17sp" android:textStyle="bold" android:textColor="#111111" android:singleLine="true"
+    android:autoSizeTextType="uniform" android:autoSizeMinTextSize="12sp" android:autoSizeMaxTextSize="17sp" android:autoSizeStepGranularity="1sp"/>
   </LinearLayout>
  </LinearLayout>
  <TextView android:id="@+id/widget_outfit" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp"
-  android:text="가디건 · 긴팔 티셔츠" android:textSize="10sp" android:textStyle="bold" android:textColor="#222222"
+  android:text="가디건 · 긴팔 티셔츠" android:textSize="13sp" android:textStyle="bold" android:textColor="#222222"
   android:singleLine="true" android:ellipsize="end"/>
 </LinearLayout>
