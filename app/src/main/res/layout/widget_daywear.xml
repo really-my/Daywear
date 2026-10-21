@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
- android:layout_width="match_parent" android:layout_height="match_parent"
- android:orientation="vertical" android:padding="14dp" android:background="@drawable/widget_bg">
- <TextView android:id="@+id/widget_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="DAYWEAR · 오늘" android:textSize="13sp" android:textStyle="bold" android:textColor="#111111"/>
- <TextView android:id="@+id/widget_temps" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="9dp" android:text="아침 —  ·  점심 —  ·  저녁 —" android:textSize="14sp" android:textStyle="bold" android:textColor="#111111"/>
- <TextView android:id="@+id/widget_outer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="아우터 · 앱에서 날씨 확인" android:textSize="12sp" android:textColor="#222222" android:maxLines="2"/>
- <TextView android:id="@+id/widget_inner" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="이너 · 앱에서 날씨 확인" android:textSize="12sp" android:textColor="#222222" android:maxLines="2"/>
- <TextView android:id="@+id/widget_updated" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="탭하여 앱 열기" android:textSize="10sp" android:textColor="#666666"/>
+ android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical"
+ android:gravity="center_vertical" android:paddingLeft="9dp" android:paddingRight="9dp"
+ android:paddingTop="4dp" android:paddingBottom="4dp" android:background="@drawable/widget_bg">
+ <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+  <TextView android:id="@+id/widget_title" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="DAYWEAR" android:textSize="10sp" android:textStyle="bold" android:textColor="#111111" android:singleLine="true" android:ellipsize="end"/>
+  <TextView android:id="@+id/widget_temps" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="☀ —°  ☁ —°  ☂ —°" android:textSize="11sp" android:textStyle="bold" android:textColor="#111111" android:singleLine="true"/>
+ </LinearLayout>
+ <TextView android:id="@+id/widget_outfit" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="오늘의 조합 · 앱에서 확인" android:textSize="10sp" android:textColor="#222222" android:maxLines="2" android:ellipsize="end"/>
 </LinearLayout>
