@@ -264,7 +264,31 @@ function currentWeatherPanel(data,date){
 }
 function compactDailyStrip(s){return '<div class="compact-day">'+s.map((x,i)=>'<div><b>'+['아침','점심','저녁'][i]+'</b><span>'+sky(x.code)[0]+' '+Math.round(x.temp)+'°</span></div>').join('')+'</div>'}
 function weatherCards(s){return '<div class="weathergrid">'+s.map((x,i)=>{const w=sky(x.code);return `<div class="weathercard"><span>${['아침','점심','저녁'][i]} <span class="small">${x.hour}:00</span></span><span class="icon">${w[0]}</span><div class="temp">${Math.round(x.temp)}<span class="small"> °C</span></div><span class="tag">${w[1]}</span><p>체감 ${Math.round(x.feel)}° · 강수 ${x.rain??'—'}%</p><p>바람 ${x.wind??'—'} m/s</p></div>`}).join('')+'</div>'}
-function recommend(s){const adjusted=s.map(x=>x.feel+Number(state.sensitivity)),low=Math.min(...adjusted),mid=adjusted[1];let outer=low<0?'두꺼운 패딩 + 목도리':low<5?'패딩 또는 두꺼운 울 코트':low<10?'울 코트 또는 보온 점퍼':low<16?'두툼한 가디건 또는 점퍼':low<20?'얇은 가디건 또는 가벼운 재킷':low<24?'가벼운 셔츠 아우터':'아우터 없이, 냉방용 얇은 셔츠';const inner=mid<5?'보온 이너 + 니트':mid<12?'긴팔 티셔츠 + 니트':mid<20?'얇은 긴팔 티셔츠':mid<25?'얇은 긴팔 또는 반팔':'통기성 좋은 반팔';const tips=[];if(Math.max(...adjusted)-low>=7)tips.push('큰 일교차. 쉽게 벗을 수 있는 아우터로 레이어링하세요.');else tips.push('아우터는 가장 낮은 체감온도, 이너는 점심 체감온도 기준.');if(s.some(x=>x.rain>=40||x.code>=51))tips.push('비·눈 예보. 우산과 발수 소재 아우터를 준비하세요.');if(s.some(x=>x.wind>=5))tips.push('강한 바람. 방풍 소재 아우터를 추천합니다.');return{outer,inner,tips}}
+function recommend(s){
+const adjusted=s.map(x=>Number(x.feel)+Number(state.sensitivity)),low=Math.min(...adjusted),high=Math.max(...adjusted),mid=adjusted[Math.min(1,adjusted.length-1)];
+const bands=[
+{min:28,outer:'아우터 없음',inner:'민소매 또는 아주 얇은 반팔'},
+{min:25,outer:'아우터 없음',inner:'통기성 좋은 반팔 또는 린넨 셔츠'},
+{min:22,outer:'얇은 셔츠 아우터 (선택)',inner:'반팔 또는 얇은 긴팔'},
+{min:19,outer:'얇은 가디건',inner:'긴팔 티셔츠'},
+{min:16,outer:'가디건 또는 얇은 재킷',inner:'긴팔 티셔츠 또는 얇은 니트'},
+{min:13,outer:'트렌치코트 또는 간절기 재킷',inner:'니트 또는 맨투맨'},
+{min:10,outer:'얇은 코트 또는 경량패딩',inner:'니트 또는 맨투맨'},
+{min:7,outer:'울 코트 또는 경량패딩',inner:'도톰한 니트'},
+{min:4,outer:'두꺼운 코트 또는 패딩',inner:'니트 + 보온 이너'},
+{min:1,outer:'숏패딩 또는 두꺼운 코트',inner:'기모 상의 + 보온 이너'},
+{min:-2,outer:'두꺼운 패딩',inner:'히트텍 + 니트'},
+{min:-5,outer:'롱패딩 또는 방한 재킷',inner:'보온 이너 + 기모 상의'},
+{min:-Infinity,outer:'방한용 두꺼운 패딩',inner:'보온 이너 + 여러 겹 레이어링'}
+];
+const outer=bands.find(b=>low>=b.min).outer,inner=bands.find(b=>mid>=b.min).inner,tips=[];
+if(high-low>=7)tips.push('아침·저녁과 낮의 체감온도 차이가 큽니다. 벗기 쉬운 겹옷을 준비하세요.');
+else tips.push('아우터는 가장 낮은 체감온도, 이너는 점심 체감온도를 기준으로 추천합니다.');
+if(s.some(x=>Number(x.rain)>=40||[51,53,55,56,57,61,63,65,66,67,71,73,75,77,80,81,82,85,86,95,96,99].includes(Number(x.code))))tips.push('비·눈 가능성이 있어 우산과 방수·발수 소재를 추천합니다.');
+if(s.some(x=>Number(x.wind)>=5))tips.push('바람이 강할 수 있어 방풍 소재를 추천합니다.');
+if(low<=0)tips.push('장갑·목도리 등 방한 소품도 챙기세요.');
+return{outer,inner,tips}
+}
 function advice(s,key,title){const r=recommend(s);return `<div class="advice"><div class="adviceheader"><div><span class="eyebrow">LAYERING GUIDE</span><h3>${title}</h3></div>${key.startsWith("daily|")?"":`<button class="primary" data-edit="${esc(key)}">${state.looks[key]?"코디 수정":"이 조합 저장"} ↗</button>`}</div><div class="clothes"><div class="cloth"><span class="glyph" aria-hidden="true">↗</span><div><span class="small">01 / OUTER</span><strong>${r.outer}</strong></div></div><div class="cloth"><span class="glyph" aria-hidden="true">↗</span><div><span class="small">02 / INNER</span><strong>${r.inner}</strong></div></div></div>${r.tips.map(t=>'<p class="note">↳ '+t+'</p>').join('')}</div>`}
 function dailyKey(){return 'daily|'+state.city.latitude+','+state.city.longitude+'|'+today(weather?.timezone)}
 async function loadDaily(){const seq=++request;$('#location').textContent=state.locationMode==='current'?'⌖ '+state.city.name:'⌖ 도시 선택 · '+state.city.name;$('#weatherStatus').textContent='날씨 불러오는 중…';$('#weather').innerHTML='<div class="statusbox">날씨 데이터를 불러오는 중입니다.</div>';$('#dailyAdvice').innerHTML='';weather=null;try{const data=await forecast(state.city);if(seq!==request)return;weather=data;renderDaily()}catch{if(seq!==request)return;$('#weatherStatus').textContent='날씨 연결 실패';$('#weather').innerHTML='<div class="statusbox">날씨를 가져오지 못했어요. 인터넷 연결을 확인해 주세요. <button class="link" id="retry">다시 시도</button></div>'}}
